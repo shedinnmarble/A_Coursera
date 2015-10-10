@@ -6,24 +6,24 @@ import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] q;
-    private int N = 0;
+    private int size = 0;
 
     public RandomizedQueue() {
         q = (Item[]) new Object[1];
     }
     public boolean isEmpty() {
-        return N == 0;
+        return size == 0;
     }
 
     public int size() {
-        return N;
+        return size;
     }
 
     private void resize(int max) {
-        assert max >= N;
+        assert max >= size;
         Item[] temp = (Item[]) new Object[max];
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < size; i++) {
 
             temp[i] = q[i];
         }
@@ -34,20 +34,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public void enqueue(Item item) {
         if (item == null)
             throw new NullPointerException();
-        if (N == q.length)
-            resize(2 * N); // double size of array if necessary
-        q[N++] = item; // add item
+        if (size == q.length)
+            resize(2 * size); // double size of array if necessary
+        q[size++] = item; // add item
 
     }
 
     public Item dequeue() {
         if (isEmpty())
             throw new java.util.NoSuchElementException();
-        int randomId = StdRandom.uniform(0, N);
+        int randomId = StdRandom.uniform(0, size);
         Item item = q[randomId];
-        q[randomId] = q[--N];
-        q[N] = null;
-        if (N > 0 && N == q.length / 4)
+        q[randomId] = q[--size];
+        q[size] = null;
+        if (size > 0 && size == q.length / 4)
             resize(q.length / 2);
         return item;
     }
@@ -56,20 +56,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (isEmpty())
             throw new java.util.NoSuchElementException();
         // get random item number
-        int randomId = StdRandom.uniform(0, N);
+        int randomId = StdRandom.uniform(0, size);
         Item item = q[randomId];
         return item;
     }
 
     private class RqIterator implements Iterator<Item> {
         private Item[] arr;
-        private int count = 0;
+        private int innerSize = 0;
 
         public RqIterator() {
-            count = N;
+            innerSize = size;
 
-            arr = (Item[]) new Object[N];
-            for (int i = 0; i < N; i++) {
+            arr = (Item[]) new Object[size];
+            for (int i = 0; i < size; i++) {
 
                 arr[i] = q[i];
             }
@@ -79,15 +79,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         @Override
         public boolean hasNext() {
             // TODO Auto-generated method stub
-            return count > 0;
+            return innerSize > 0;
         }
 
         @Override
         public Item next() {
             if (!hasNext())
                 throw new java.util.NoSuchElementException();
-            Item item = arr[--count];
-            arr[count] = null;
+            Item item = arr[--innerSize];
+            arr[innerSize] = null;
             return item;
         }
 
