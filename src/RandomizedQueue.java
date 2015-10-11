@@ -9,7 +9,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int N = 0;
 
     public RandomizedQueue() {
-        q = (Item[]) new Object[2];
+        q = (Item[]) new Object[1];
     }
 
     public boolean isEmpty() {
@@ -23,11 +23,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private void resize(int max) {
         assert max >= N;
         Item[] temp = (Item[]) new Object[max];
-        int j = 0;
-        for (int i = 0; i < q.length; i++) {
-            if (q[i] == null)
-                continue;
-            temp[j++] = q[i];
+
+        for (int i = 0; i < N; i++) {
+
+            temp[i] = q[i];
         }
         q = temp;
 
@@ -37,7 +36,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (item == null)
             throw new NullPointerException();
         if (N == q.length)
-            resize(2 * q.length); // double size of array if necessary
+            resize(2 * N); // double size of array if necessary
         q[N++] = item; // add item
 
     }
@@ -45,17 +44,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Item dequeue() {
         if (isEmpty())
             throw new java.util.NoSuchElementException();
-        // get random item number
-
-        Item item;
-        do {
-            int randomId = StdRandom.uniform(0, N);
-            item = q[randomId];
-            q[randomId] = null;
-        } while (item == null);
-
-        N--;
-        if (N >= 0 && N <= q.length / 4)
+        int randomId = StdRandom.uniform(0, N);
+        Item item = q[randomId];
+        q[randomId] = q[--N];
+        q[N] = null;
+        if (N > 0 && N == q.length / 4)
             resize(q.length / 2);
         return item;
     }
@@ -64,11 +57,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (isEmpty())
             throw new java.util.NoSuchElementException();
         // get random item number
-        Item item;
-        do {
-            int randomId = StdRandom.uniform(0, N);
-            item = q[randomId];
-        } while (item == null);
+        int randomId = StdRandom.uniform(0, N);
+        Item item = q[randomId];
         return item;
     }
 
@@ -78,19 +68,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public RqIterator() {
             count = N;
-            int j = 0;
+
             arr = (Item[]) new Object[N];
-            for (int i = 0; i < q.length; i++) {
-                if (q[i] == null)
-                    continue;
-                arr[j++] = q[i];
+            for (int i = 0; i < N; i++) {
+
+                arr[i] = q[i];
             }
+            StdRandom.shuffle(arr);
         }
 
         @Override
         public boolean hasNext() {
             // TODO Auto-generated method stub
-            return count >= 0;
+            return count > 0;
         }
 
         @Override
@@ -98,6 +88,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (!hasNext())
                 throw new java.util.NoSuchElementException();
             Item item = arr[--count];
+            arr[count] = null;
             return item;
         }
 
@@ -116,14 +107,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        RandomizedQueue<String> queue = new RandomizedQueue<String>();
-        while (!StdIn.isEmpty()) {
-            String item = StdIn.readString();
-            if (!item.equals("-"))
-                queue.enqueue(item);
-            else
-                StdOut.println(queue.dequeue());
+        RandomizedQueue<String> testQueue = new RandomizedQueue<String>();
+        testQueue.enqueue("7");
+        testQueue.enqueue("8");
+        testQueue.enqueue("9");
+        for (String s : testQueue) {
+            StdOut.println(s);
         }
+        StdOut.println(testQueue.sample());
+
     }
 
 }
