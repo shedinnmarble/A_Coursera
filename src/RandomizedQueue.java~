@@ -7,6 +7,7 @@ import edu.princeton.cs.algs4.StdRandom;
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] q;
     private int N = 0;
+    
 
     public RandomizedQueue() {
         q = (Item[]) new Object[2];
@@ -23,13 +24,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private void resize(int max) {
         assert max >= N;
         Item[] temp = (Item[]) new Object[max];
-        int j = 0;
-        for (int i = 0; i < q.length; i++) {
-            if (q[i] == null)
-                continue;
+        int j=0;
+        for (int i = 0; i <q.length; i++) {
+            if(q[i]==null) continue;
             temp[j++] = q[i];
         }
         q = temp;
+        
 
     }
 
@@ -39,7 +40,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (N == q.length)
             resize(2 * q.length); // double size of array if necessary
         q[N++] = item; // add item
+       
+    }
 
+    private void copyArray(int startIndex, int endIndex) {
+        // for()
     }
 
     public Item dequeue() {
@@ -55,8 +60,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         } while (item == null);
 
         N--;
-        if (N >= 0 && N <= q.length / 4)
-            resize(q.length / 2);
+        if(N>=0&&N<=q.length/4) resize(q.length/2);
         return item;
     }
 
@@ -68,7 +72,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         do {
             int randomId = StdRandom.uniform(0, N);
             item = q[randomId];
-        } while (item == null);
+        } while (!item.equals(null));
         return item;
     }
 
